@@ -14,7 +14,19 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
-name: inspec-test
-title: Simple cross platform tests for ports
-supports:
-  - platform: aws
+# External input from file
+any = input('any')
+# Control
+control 'Linux instance check' do
+  title 'SSH access'
+  desc 'SSH port should not be open to the world'
+  impact 0.9
+  require 'rbconfig'
+  is_windows = (RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/)
+  if ! is_windows
+    describe port(22) do
+      it { should be_listening }
+      its('addresses') {should_not include any}
+    end
+  end
+end
