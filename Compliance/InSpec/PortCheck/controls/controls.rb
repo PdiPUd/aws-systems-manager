@@ -35,3 +35,10 @@ control 'AlbApp' do
     it { should allow_in(port: 80, security_group: 'sg-0e9cbaf20c53fe09a') }
   end
 end
+
+control'EC2' do
+  title 'Control o EC2'
+  describe aws_ec2_instance('i-0233cfa65d250c43c') do
+    its(:security_group_ids) { should include 'sg-066cc7a9ac316cabf' }
+  end
+end
